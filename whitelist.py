@@ -2,6 +2,7 @@
 
 import socket
 import os
+os.system("apt install  -y python-pip")
 os.system("pip install python-iptables")
 import sys
 import iptc
