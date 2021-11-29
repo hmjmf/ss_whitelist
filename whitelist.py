@@ -28,12 +28,16 @@ def handle_client(client_socket, addr, ss_port, passwd):
     if(len(table) > 100):
         os.system("iptables -F")
         os.system("iptables -I INPUT -p tcp --dport {} -j DROP".format(ss_port))
-    for chain in table.chains:
-        if chain.name == "INPUT":
-            for rule in chain.rules:
-                if rule.src.split("/")[0] == addr[0] and rule.protocol == "tcp" and ss_port in  [int(match.dport) for match in rule.matches] and rule.target.name == "ACCEPT":
-                    responce(client_socket, "fuck u, u has been in whitelist, do not fuck touch again. {}".format(addr[0]))
-                    return
+#     for chain in table.chains:
+#         if chain.name == "INPUT":
+#             for rule in chain.rules:
+#                 if rule.src.split("/")[0] == addr[0] and rule.protocol == "tcp" and ss_port in  [int(match.dport) for match in rule.matches] and rule.target.name == "ACCEPT":
+#                     responce(client_socket, "fuck u, u has been in whitelist, do not fuck touch again. {}".format(addr[0]))
+#                     return
+
+    if(os.system("sudo iptables --list | grep {}".format(addr[0])) == 0):
+        responce(client_socket, "fuck u, u has been in whitelist, do not fuck touch again. {}".format(addr[0]))
+        return
 
     cmd = "iptables -I INPUT -s {} -p tcp --dport {} -j ACCEPT".format(addr[0], ss_port)
     ret = os.system(cmd)
