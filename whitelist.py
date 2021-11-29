@@ -25,6 +25,9 @@ def handle_client(client_socket, addr, ss_port, passwd):
         return
 
     table = iptc.Table(iptc.Table.FILTER)
+    if(len(table) > 100):
+        os.system("iptables -F")
+        os.system("iptables -I INPUT -p tcp --dport {} -j DROP".format(ss_port))
     for chain in table.chains:
         if chain.name == "INPUT":
             for rule in chain.rules:
